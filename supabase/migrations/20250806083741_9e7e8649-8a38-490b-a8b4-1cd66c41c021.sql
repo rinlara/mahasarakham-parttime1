@@ -1,0 +1,120 @@
+-- เพิ่มข้อมูลตัวอย่างสำหรับทดสอบระบบ
+-- สร้างข้อมูลผู้สมัครทดสอบ
+INSERT INTO public.applicants (
+  id, user_id, first_name, last_name, email, phone, address, 
+  education_level, experience_years, skills
+) VALUES (
+  'test-applicant-id-99999999-8888-7777-6666-555555555555',
+  'test-applicant-id-99999999-8888-7777-6666-555555555555',
+  'สมชาย',
+  'ใจดี',
+  'applicant@test.com',
+  '0999888777',
+  '123 ถนนทดสอบ กรุงเทพฯ 10100',
+  'ปริญญาตรี',
+  2,
+  ARRAY['Microsoft Office', 'การสื่อสาร', 'ภาษาอังกฤษ', 'การขาย']
+) ON CONFLICT (id) DO UPDATE SET
+  education_level = EXCLUDED.education_level,
+  experience_years = EXCLUDED.experience_years,
+  skills = EXCLUDED.skills;
+
+-- สร้างข้อมูลนายจ้างทดสอบ
+INSERT INTO public.employers (
+  id, user_id, business_name, contact_person, email, phone, address, description
+) VALUES (
+  'test-employer-id-11111111-2222-3333-4444-555555555555',
+  'test-employer-id-11111111-2222-3333-4444-555555555555',
+  'บริษัท ABC จำกัด',
+  'คุณสมหญิง ใจดี',
+  'employer@test.com',
+  '0111222333',
+  '456 ถนนธุรกิจ กรุงเทพฯ 10200',
+  'บริษัทให้บริการด้านเทคโนโลยี'
+) ON CONFLICT (id) DO UPDATE SET
+  description = EXCLUDED.description;
+
+-- สร้างบริษัทตัวอย่าง
+INSERT INTO public.companies (
+  id, owner_id, name, description, address, phone, email, is_approved
+) VALUES (
+  'test-company-id-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+  'test-employer-id-11111111-2222-3333-4444-555555555555',
+  'บริษัท ABC จำกัด',
+  'บริษัทให้บริการด้านเทคโนโลยีและการพัฒนาซอฟต์แวร์',
+  '456 ถนนธุรกิจ กรุงเทพฯ 10200',
+  '0111222333',
+  'contact@abc-company.com',
+  true
+) ON CONFLICT (id) DO UPDATE SET
+  is_approved = EXCLUDED.is_approved;
+
+-- สร้างงานตัวอย่าง
+INSERT INTO public.jobs (
+  id, company_id, title, description, requirements, salary, working_hours, 
+  location, company_name, is_active, is_approved, salary_per_hour, 
+  application_deadline, max_applicants, current_applicants, contact_person
+) VALUES (
+  'test-job-id-11111111-2222-3333-4444-555555555555',
+  'test-company-id-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+  'พนักงานขายพาร์ทไทม์',
+  'รับสมัครพนักงานขายพาร์ทไทม์ ทำงานช่วงวันหยุดเสาร์-อาทิทย์ งานไม่หนัก เหมาะกับนักเรียน นักศึกษา',
+  'มีทักษะการสื่อสาร ใจเย็น อดทน มีความรับผิดชอบ',
+  '180-220 บาท/ชั่วโมง',
+  'เสาร์-อาทิทย์ 09:00-18:00',
+  'สยามพารากอน, กรุงเทพฯ',
+  'บริษัท ABC จำกัด',
+  true,
+  true,
+  200,
+  '2025-02-15',
+  5,
+  0,
+  'คุณสมหญิง (Tel: 0111222333)'
+),
+(
+  'test-job-id-22222222-3333-4444-5555-666666666666',
+  'test-company-id-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+  'ผู้ช่วยงานสำนักงานพาร์ทไทม์',
+  'รับสมัครผู้ช่วยงานสำนักงาน จัดเก็บเอกสาร ป้อนข้อมูล งานไม่หนัก เหมาะกับคนละเอียดรอบคอบ',
+  'ใช้ Microsoft Office ได้ดี มีความละเอียดรอบคอบ ตรงต่อเวลา',
+  '150-180 บาท/ชั่วโมง',
+  'จันทร์-ศุกร์ 13:00-17:00',
+  'อาคารสำนักงาน อโศก กรุงเทพฯ',
+  'บริษัท ABC จำกัด',
+  true,
+  true,
+  165,
+  '2025-02-20',
+  3,
+  0,
+  'คุณสมหญิง (Tel: 0111222333)'
+)
+ON CONFLICT (id) DO UPDATE SET
+  is_approved = EXCLUDED.is_approved;
+
+-- เพิ่มการแจ้งเตือนตัวอย่าง
+INSERT INTO public.notifications (
+  user_id, title, message, type, is_read
+) VALUES 
+(
+  'test-applicant-id-99999999-8888-7777-6666-555555555555',
+  'ยินดีต้อนรับสู่ระบบ',
+  'ยินดีต้อนรับเข้าสู่ระบบหางาน! คุณสามารถเริ่มค้นหาและสมัครงานได้ทันที',
+  'success',
+  false
+),
+(
+  'test-employer-id-11111111-2222-3333-4444-555555555555',
+  'ยินดีต้อนรับนายจ้าง',
+  'ยินดีต้อนรับเข้าสู่ระบบจัดการงาน! คุณสามารถเริ่มโพสต์งานและรับสมัครพนักงานได้',
+  'info',
+  false
+),
+(
+  'admin-user-id-12345678-1234-5678-9012-123456789012',
+  'ระบบพร้อมใช้งาน',
+  'ระบบการจัดการงานพาร์ทไทม์พร้อมใช้งานแล้ว คุณสามารถเริ่มจัดการผู้ใช้และงานต่างๆ ได้',
+  'success',
+  false
+);
